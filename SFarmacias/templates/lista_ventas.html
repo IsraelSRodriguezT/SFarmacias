@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Ventas{% endblock %}
+
+{% block content %}
+<h2>Lista de Ventas</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Codigo</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>TIPO DE PAGO</th>
+            <th>Registro</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for venta in ventas %}
+        <tr>
+            <td>{{ venta.id }}</td>
+            <td>{{ venta.codigo }}</td>
+            <td>{{ venta.fecha }}</td>
+            <td>{{ venta.total }}</td>
+            <td>{{ venta.tipo_pago }}</td>
+            <td>{{ venta.registro }}</td>
+            <td>
+                <div class="buttons">
+                <a href="{% url 'actualizar_venta' venta.id %}">Editar</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    
+<div class="buttons">
+    <a href="{% url 'crear_venta' %}">Crear Nueva Venta</a>
+    <a href="{% url 'dashboard' %}" >Volver al Panel</a>
+</div>
+{% endblock %}
