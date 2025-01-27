@@ -98,13 +98,21 @@ class Inventario(models.Model):
     def __str__(self):
         return str(self.sucursal) + ' | ' + self.codigo
 
-class Medicamento(models.Model):
-    nombre = models.CharField(max_length=100, unique=True)
+class Stock(models.Model):
+    #Atributos:
     cantidad = models.PositiveIntegerField()
+    medicamento = models.ForeignKey('Medicamento', on_delete=models.CASCADE, related_name='stock_list')
+    inventario = models.ForeignKey(Inventario, on_delete=models.CASCADE, related_name='stock_list')
+    def __str__(self):
+        return str(self.medicamento) + ' | ' + str(self.cantidad) + ' | ' + str(self.inventario)
+
+class Medicamento(models.Model):
+    #Atributos:
+    nombre = models.CharField(max_length=100, unique=True)
     codigo = models.CharField(max_length=7,unique=True,editable=False)
     descripcion = models.CharField(max_length=100, blank=True, null=True)
     precio = models.FloatField()
-    inventario = models.ForeignKey(Inventario, related_name='medicamentos', on_delete=models.CASCADE)
+    farmacia = models.ForeignKey(Farmacia, related_name='medicamentos', on_delete=models.CASCADE)
     # Metodos:
     def save(self, *args, **kwargs):
         if not self.codigo:
@@ -112,7 +120,7 @@ class Medicamento(models.Model):
             self.codigo = f"{medicamentos:06d}"
         super().save(*args, **kwargs)
     def __str__(self):
-        return self.nombre + ' | ' + str(self.precio) + ' | ' + str(self.inventario)
+        return self.nombre + ' | ' + str(self.precio) + ' | ' + str(self.farmacia)
 
 class Pedido(models.Model):
     cantidad = models.PositiveIntegerField(default=1)
@@ -125,15 +133,25 @@ class Pedido(models.Model):
     def verificar_inventario(self):
         inventario_actual = self.sucursal.inventario
         medicamento = self.medicamento
-        if inventario_actual.medicamentos.filter(id=medicamento.id, cantidad__gte=self.cantidad).exists():
+        stock_actual = inventario_actual.stock_list.filter(
+            medicamento=medicamento,
+            cantidad__gte=self.cantidad
+        ).first()
+        if stock_actual:
             return True, inventario_actual
         otras_sucursales = Sucursal.objects.exclude(id=self.sucursal.id)
         for sucursal in otras_sucursales:
             inventario = sucursal.inventario
-            if inventario.medicamentos.filter(id=medicamento.id, cantidad__gte=self.cantidad).exists():
+            stock_en_otra_sucursal = inventario.stock_list.filter(
+                medicamento=medicamento,
+                cantidad__gte=self.cantidad
+            ).first()
+            if stock_en_otra_sucursal:
                 self.traer_de_otra_sucursal = True
                 self.save()
                 return False, inventario
+        self.traer_de_otra_sucursal = False
+        self.save()
         return False, None
 
     def __str__(self):
@@ -144,16 +162,25 @@ class Venta(models.Model):
     fecha = models.DateField(default=now)
     total = models.FloatField(editable=False, null=True)
     tipo_pago = models.CharField(max_length=50, choices=[(tag.value, tag.name) for tag in TipoPago])
-    registro = models.ForeignKey('Registro', on_delete=models.CASCADE, related_name='ventas')
+    registro = models.ForeignKey('Registro', on_delete=models.CASCADE, related_name='ventas', editable=False, null=True)
     # Metodos:
     def save(self, *args, **kwargs):
         if not self.codigo:
             ventas = Venta.objects.count() + 1
             self.codigo = f"{ventas:06d}"
-        self.total = round(self.calcular_total(), 2)
         super().save(*args, **kwargs)
+        if self.pedidos.exists():
+            primer_pedido = self.pedidos.first()
+            cliente = primer_pedido.cliente
+            if self.registro != cliente.registro:
+                self.registro = cliente.registro
+        super().save(*args, **kwargs)
+        self.total = round(self.calcular_total(), 2)
+        super().save(update_fields=['total'])
 
     def calcular_total(self):
+        if not self.pedidos.exists():
+            return 0
         total = 0
         for pedido in self.pedidos.all():
             total += pedido.cantidad * pedido.medicamento.precio
