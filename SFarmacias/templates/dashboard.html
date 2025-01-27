@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2>Bienvenido, {{ user.username }}</h2>
+    
+    <div class="buttons">
+        <a href="/admin/">Admin</a>
+        <a href="{% url 'lista_pedidos' %}">Pedido Realizados</a>
+        <a href="{% url 'lista_ventas' %}">Ventas Realizadas</a>
+    </div>
+</div>
+{% endblock %}

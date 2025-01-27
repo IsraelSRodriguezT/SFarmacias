@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Productos{% endblock %}
+
+{% block content %}
+<h2>Sucursales</h2>
+<table>
+    <thead> 
+    <tr>
+        <th>Sucursal</th>
+        <th>Direccion</th>
+    </tr>
+    </thead>
+    <tbody> 
+    {% for sucursal in sucursales %}
+        <tr>
+            <td>{{ sucursal.numero }}</td>
+            <td>{{ sucursal.direccion }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
