@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Pedidos{% endblock %}
+
+{% block content %}
+<h2>Lista de Pedidos</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Medicamento</th>
+            <th>Cantidad</th>
+            <th>Venta</th>
+            <th>Sucursal</th>
+            <th>EN OTRA SUCURSAL</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pedido in pedidos %}
+        <tr>
+            <td>{{ pedido.id }}</td>
+            <td>{{ pedido.cliente }}</td>
+            <td>{{ pedido.medicamento }}</td>
+            <td>{{ pedido.cantidad }}</td>
+            <td>{{ pedido.venta }}</td>
+            <td>{{ pedido.sucursal }}</td>
+            <td>{{ pedido.traer_de_otra_sucursal }}</td>
+            <td>
+                <div class="buttons">
+                    <a href="{% url 'actualizar_pedido' pedido.id %}">Editar</a>
+                    <a href="{% url 'verificar_inventario' pedido.id %}">Verificar Inventario</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    
+<div class="buttons">
+    <a href="{% url 'crear_pedido' %}" >Crear Nuevo Pedido</a>
+    <a href="{% url 'dashboard' %}" >Volver al Panel</a>
+</div>
+    
+{% endblock %}

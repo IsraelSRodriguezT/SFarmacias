@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Pedido{% endblock %}
+
+{% block content %}
+<h2>Crear Pedido</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar</button>
+</form>
+    
+<div class="buttons">
+    <a href="{% url 'crear_venta' %}">Generar Venta</a>
+    <a href="{% url 'lista_pedidos' %}">Volver</a>
+</div>
+{% endblock %}

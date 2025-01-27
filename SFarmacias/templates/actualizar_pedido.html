@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Actualizar Pedido{% endblock %}
+
+{% block content %}
+<h2>Actualizar Pedido: #{{ pedido.id }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Actualizar</button>
+</form>
+    
+<div class="buttons">
+    <a href="{% url 'lista_pedidos' %}">Volver</a>
+</div>
+{% endblock %}
