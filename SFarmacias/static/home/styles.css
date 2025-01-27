@@ -90,21 +90,21 @@ footer p {
 
 table {
     border-collapse: collapse;
-    width: 100%; /* Ajusta la tabla para que ocupe el 100% del ancho de la página */
+    width: 100%;
     margin: 20px 0;
-    background-color: #f0f0f0; /* Fondo gris claro */
+    background-color: #f0f0f0;
 }
 
 th, td {
-    border: 1px solid black; /* Bordes negros */
+    border: 1px solid black;
     padding: 10px;
-    text-align: center; /* Centra el texto en las celdas */
+    text-align: center;
 }
 
 th {
-    background-color: #d3d3d3; /* Fondo gris oscuro para los encabezados */
+    background-color: #d3d3d3;
 }
 
 tr:nth-child(even) {
-    background-color: #e0e0e0; /* Fondo gris ligeramente más oscuro para filas pares */
+    background-color: #e0e0e0;
 }
