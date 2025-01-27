@@ -14,4 +14,4 @@ class PedidoForm(forms.ModelForm):
 class VentaForm(forms.ModelForm):
     class Meta:
         model = Venta
-        fields = ['fecha', 'tipo_pago', 'registro']
+        fields = ['fecha', 'tipo_pago']

@@ -1,8 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
-from .models import Pedido, Medicamento, Venta, Cliente, Sucursal
+from .models import Pedido, Medicamento, Venta, Sucursal
 from django.contrib.auth import login as auth_login, authenticate
-from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomLoginForm,PedidoForm,VentaForm
 from django.contrib import messages
 
@@ -62,8 +60,6 @@ def verificar_inventario_view(request, pedido_id):
         mensaje = f"El medicamento está disponible en la sucursal {inventario.sucursal.numero}."
     else:
         mensaje = "El medicamento no está disponible en ninguna sucursal."
-
-    # Pasa el mensaje como contexto a la plantilla
     return render(request, 'verificar_inventario.html', {
         'mensaje': mensaje,
         'traer_de_otra_sucursal': pedido.traer_de_otra_sucursal,

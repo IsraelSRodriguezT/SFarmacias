@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Empleado,Cliente,Farmacia,Direccion,Sucursal,Inventario,Medicamento,Pedido,Venta,Registro
+from .models import Empleado,Cliente,Farmacia,Direccion,Sucursal,Inventario,Medicamento,Pedido,Venta,Registro,Stock
 from django.contrib import messages
 
 class EmpleadoAdmin(admin.ModelAdmin):
@@ -26,11 +26,13 @@ class InventarioAdmin(admin.ModelAdmin):
     list_display = ('codigo', 'sucursal')
     search_fields = ('codigo',)
 admin.site.register(Inventario,InventarioAdmin)
+class StockAdmin(admin.ModelAdmin):
+    list_display = ('cantidad', 'medicamento','inventario')
+admin.site.register(Stock,StockAdmin)
 class MedicamentoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'descripcion', 'cantidad', 'codigo', 'precio', 'inventario')
-    search_fields = ('nombre', 'codigo', 'inventario')
+    list_display = ('nombre', 'descripcion', 'codigo', 'precio')
+    search_fields = ('nombre', 'codigo',)
 admin.site.register(Medicamento,MedicamentoAdmin)
-
 def generar_pedido(modeladmin, request, queryset):
     for pedido in queryset:
         disponible, inventario = pedido.verificar_inventario()
