@@ -3,7 +3,7 @@ Proyecto el cual tiene como objetivo gestionar farmacias.
 
 ### Diagrama UML
 Se adjunta el diagrama UML del presente proyecto.
-![Image](https://github.com/user-attachments/assets/e8e46432-25ae-4a0c-8e3c-936f218e315a)
+![Image](https://github.com/user-attachments/assets/ec2e395f-6e4d-4075-91cc-cb2b22a2a35b)
 
 ## Interfaz del proyecto
 # Inicio
